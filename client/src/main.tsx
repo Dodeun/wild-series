@@ -7,6 +7,7 @@ import { RouterProvider, createBrowserRouter } from "react-router";
 
 // Import the main app component
 import App from "./App";
+import Programs from "./components/Programs";
 
 // Import additional components for new routes
 // Try creating these components in the "pages" folder
@@ -16,12 +17,28 @@ import App from "./App";
 
 /* ************************************************************************* */
 
+async function programsLoader() {
+  const response = await fetch("http://localhost:3310/api/programs");
+  if (!response.ok) {
+    throw new Error("Failed to fetch programs");
+  }
+  const data = await response.json();
+  return data;
+}
+
 // Create router configuration with routes
 // You can add more routes as you build out your app!
 const router = createBrowserRouter([
   {
     path: "/", // The root path
     element: <App />, // Renders the App component for the home page
+    children: [
+      {
+        path: "/programs",
+        element: <Programs />,
+        loader: programsLoader,
+      },
+    ],
   },
   // Try adding a new route! For example, "/about" with an About component
 ]);
